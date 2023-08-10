@@ -26,7 +26,7 @@ def sync_folders(source_folder, replica_folder, log_file, sync_interval):
 
     """
     while True:
-        # First check the replica folder to identify items that need to be deleted
+        # First walk through the replica folder to identify items that need to be deleted
         for root, dirs, files in os.walk(replica_folder):
             rel_path = os.path.relpath(root, replica_folder)
             source_root = os.path.join(source_folder, rel_path)
@@ -56,7 +56,7 @@ def sync_folders(source_folder, replica_folder, log_file, sync_interval):
                         log.write(f"{time.ctime()}: Deleted subfolder {dir} from {root}\n")
                     print(f"{time.ctime()}: Deleted subfolder {dir} from {root}")
 
-        # Second,Q walk through the source folder to synchronize new and modified files
+        # Second, walk through the source folder to synchronize new and modified files
         for root, dirs, files in os.walk(source_folder):
             rel_path = os.path.relpath(root, source_folder)
             replica_root = os.path.join(replica_folder, rel_path)
