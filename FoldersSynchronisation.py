@@ -15,6 +15,16 @@ def calculate_md5(file_path):
 
 
 def sync_folders(source_folder, replica_folder, log_file, sync_interval):
+    """
+        Synchronise folders, keeps the contents in replica folder always the same as source folder.
+
+        Parameters:
+        - source_folder: Path to the source folder.
+        - replica_folder: Path to the replica folder.
+        - log_file: Path to the logfile where changes are saved.
+        - sync_interval (int): Synchronization interval in seconds.
+
+    """
     while True:
         # First check the replica folder to identify items that need to be deleted
         for root, dirs, files in os.walk(replica_folder):
@@ -46,10 +56,13 @@ def sync_folders(source_folder, replica_folder, log_file, sync_interval):
                         log.write(f"{time.ctime()}: Deleted subfolder {dir} from {root}\n")
                     print(f"{time.ctime()}: Deleted subfolder {dir} from {root}")
 
-        # Second, walk through the source folder to synchronize new and modified files
+        # Second,Q walk through the source folder to synchronize new and modified files
         for root, dirs, files in os.walk(source_folder):
             rel_path = os.path.relpath(root, source_folder)
             replica_root = os.path.join(replica_folder, rel_path)
+
+            # Making sure the replica folder is created in case it doesn't initially exist
+            os.makedirs(replica_root, exist_ok=True)
 
             for file in files:
                 if file in ['.DS_Store', '.directory', 'desktop.ini']:
